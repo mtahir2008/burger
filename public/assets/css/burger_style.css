@@ -1,0 +1,18 @@
+body, html {
+    background-image: url("../img/background.jpg");
+
+}
+
+img {
+    max-height: 200;
+}
+
+.title {
+
+    font-family: 'Luckiest Guy', cursive;
+}
+
+
+#header {
+    margin-bottom: 1.5em;
+}
