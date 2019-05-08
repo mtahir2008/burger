@@ -1,6 +1,7 @@
 DROP DATABASE IF EXISTS `burgers_db`;
 create database burgers_db;
 USE burgers_db;
+USE z5c5dy5399b7z3vf;
 
 create table burgers (
 
