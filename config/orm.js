@@ -1,7 +1,6 @@
 // Import MySQL connection.
-var connection = require("../config/connection.js");
+const connection = require("./connection.js");
 
-// Helper function for SQL syntax.
 function printQuestionMarks(num) {
   var arr = [];
 
@@ -12,36 +11,43 @@ function printQuestionMarks(num) {
   return arr.toString();
 }
 
-// Helper function for SQL syntax.
-function objToSql(ob) {
+// Helper function to convert object key/value pairs to SQL syntax
+function objectToSql(object) {
   var arr = [];
 
-  for (var key in ob) {
-    if (Object.hasOwnProperty.call(ob, key)) {
-      arr.push(key + "=" + ob[key]);
+  // loop through the keys and push the key/value as a string int arr
+  for (var key in object) {
+    var value = object[key];
+    // check to skip hidden properties
+    if (Object.hasOwnProperty.call(object, key)) {
+      // if string with spaces, add quotations (Lana Del Grey => 'Lana Del Grey')
+      if (typeof value === "string" && value.indexOf(" ") >= 0) {
+        value = "'" + value + "'";
+      }
+
+      arr.push(key + "=" + value);
     }
   }
 
+  // translate array of strings to a single comma-separated string
   return arr.toString();
 }
 
 // Object for all our SQL statement functions.
-var orm = {
-
-  // Select all items in database table.
-  selectAll: function(tableInput, cb) {
-    var queryString = "SELECT * FROM " + tableInput + ";";
-    connection.query(queryString, function(err, result) {
+const orm = {
+  // Read All
+  selectAll: function (tableName, callback) {
+    var queryString = "SELECT * FROM " + tableName + ";";
+    connection.query(queryString, function (err, result) {
       if (err) {
         throw err;
       }
-      cb(result);
+      callback(result);
     });
   },
-
-  // Insert one item into database table.
-  insertOne: function(table, cols, vals, cb) {
-    var queryString = "INSERT INTO " + table;
+  // Create One
+  insertOne: function (tableName, cols, vals, callback) {
+    var queryString = "INSERT INTO " + tableName;
 
     queryString += " (";
     queryString += cols.toString();
@@ -52,29 +58,43 @@ var orm = {
 
     console.log(queryString);
 
-    connection.query(queryString, vals, function(err, result) {
+    connection.query(queryString, vals, function (err, result) {
       if (err) {
         throw err;
       }
 
-      cb(result);
+      callback(result);
     });
   },
-  // Update existing item in database table.
-  updateOne: function(table, objColVals, condition, cb) {
-    var queryString = "UPDATE " + table;
+  // An example of objectColVals would be { devoured: 'true' }
+  updateOne: function (tableName, objectColVals, condition, callback) {
+    var queryString = "UPDATE " + tableName;
 
     queryString += " SET ";
-    queryString += objToSql(objColVals);
+    queryString += objectToSql(objectColVals);
     queryString += " WHERE ";
     queryString += condition;
 
     console.log(queryString);
-    connection.query(queryString, function(err, result) {
+    connection.query(queryString, function (err, result) {
       if (err) {
         throw err;
       }
-      cb(result);
+
+      callback(result);
+    });
+  },
+  delete: function (tableName, condition, callback) {
+    var queryString = "DELETE FROM " + tableName;
+    queryString += " WHERE ";
+    queryString += condition;
+
+    connection.query(queryString, function (err, result) {
+      if (err) {
+        throw err;
+      }
+
+      callback(result);
     });
   }
 };
