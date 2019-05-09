@@ -3,7 +3,7 @@
 
 ## Depeloyment
 view on heroku
-https://blooming-springs-84920.herokuapp.com/
+https://whispering-inlet-19938.herokuapp.com/
 
 ### Overview 
 A burger logger utilizes MySQL, Express, and Handlebars to allow users to create, update, and read burgers from the database.
